@@ -18,6 +18,9 @@ public:
     ~MainWindow() override;
 
 private:
+    void  btnNumClicked();
+    void btnPeriodClicked();
+    void btnDelClicked();
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
