@@ -26,6 +26,7 @@ public:
 private:
     void btnNumClicked();
     void btnBinaryOperatorClicked();
+    void btnUnaryOperatorClicked();
     void btnbtnEqualClicked();
     void btnPeriodClicked();
     void btnDelClicked();

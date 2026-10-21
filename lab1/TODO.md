@@ -13,5 +13,10 @@
   - 待办：增加 `afterEquals` 标志。等号后输入数字时清空 `operands` 和 `opcodes`；等号后按运算符时则以当前结果继续运算。
 
 - [ ] **清除功能不彻底**
-  - 现象：按 `C`（`btnClearAll`）只清空了当前 `operand`，之前压栈的操作数和运算符仍残留。
-  - 待办：`btnClearAllClicked()` 中同时清空 `operands`、`opcodes`、`opcode` 和 `operand`。
+  - 现象：`btnClearAllClicked()` 目前只调用了 `operands.clear()`，`operand`、`opcodes`、`opcode` 均未清空，且显示屏仍显示旧内容。
+  - 待办：同时清空 `operands`、`opcodes`、`opcode` 和 `operand`，再刷新显示。
+
+- [ ] **单目运算的边界值**
+  - `1/x`：输入 0 时当前显示 `inf`，需要和除零处理一起给出错误提示。
+  - `²√x`：输入负数时当前显示 `nan`，需要提示无效输入或禁止运算。
+  - 单目运算只在 `operand` 非空时生效；按 `=` 后 `operand` 为空，此时按单目键无反应，需随"等号后的输入状态"一起处理。

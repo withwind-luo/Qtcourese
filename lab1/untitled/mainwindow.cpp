@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "math.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,11 +27,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnClear,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
     connect(ui->btnClearAll,&QPushButton::clicked,this,&MainWindow::btnClearAllClicked);
     connect(ui->btnDel,&QPushButton::clicked,this,&MainWindow::btnDelClicked);
-    connect(ui->btnSign,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnPercentage,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnInverse,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnSquare,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnSqrt,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
+    connect(ui->btnSign,&QPushButton::clicked,this,&MainWindow::btnUnaryOperatorClicked);
+    connect(ui->btnPercentage,&QPushButton::clicked,this,&MainWindow::btnUnaryOperatorClicked);
+    connect(ui->btnInverse,&QPushButton::clicked,this,&MainWindow::btnUnaryOperatorClicked);
+    connect(ui->btnSquare,&QPushButton::clicked,this,&MainWindow::btnUnaryOperatorClicked);
+    connect(ui->btnSqrt,&QPushButton::clicked,this,&MainWindow::btnUnaryOperatorClicked);
 }
 
 MainWindow::~MainWindow()
@@ -64,6 +65,29 @@ void MainWindow::btnBinaryOperatorClicked()
     ui->display->setText(result);
 }
 
+void MainWindow::btnUnaryOperatorClicked()
+{
+    if(operand != "")
+    {
+        double result = operand.toDouble();
+
+        QString op = qobject_cast<QPushButton*>(sender())->text();
+        if(op == "%")
+            result /= 100;
+        else if(op == "1/x")
+            result = 1 / result;
+        else if(op == "x²")
+            result *= result;
+        else if(op == "²√x")
+            result = sqrt(result);
+        else if(op == "±")
+            result = -result;
+
+        operand = QString::number(result);
+        ui->display->setText(operand);
+    }
+}
+
 void MainWindow::btnbtnEqualClicked()
 {
     if(operand != "")
@@ -91,7 +115,7 @@ void MainWindow::btnDelClicked()
 
 void MainWindow::btnClearAllClicked()
 {
-    operand.clear();
+    operands.clear();
     ui->display->setText(operand);
 }
 
