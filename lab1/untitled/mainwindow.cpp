@@ -18,13 +18,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnNum8,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
     connect(ui->btnNum9,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
     connect(ui->btnPeriod,&QPushButton::clicked,this,&MainWindow::btnPeriodClicked);
-    connect(ui->btnPlus,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnMinus,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnMultiple,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnDivide,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnEqual,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
+    connect(ui->btnPlus,&QPushButton::clicked,this,&MainWindow::btnBinaryOperatorClicked);
+    connect(ui->btnMinus,&QPushButton::clicked,this,&MainWindow::btnBinaryOperatorClicked);
+    connect(ui->btnMultiple,&QPushButton::clicked,this,&MainWindow::btnBinaryOperatorClicked);
+    connect(ui->btnDivide,&QPushButton::clicked,this,&MainWindow::btnBinaryOperatorClicked);
+    connect(ui->btnEqual,&QPushButton::clicked,this,&MainWindow::btnbtnEqualClicked);
     connect(ui->btnClear,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
-    connect(ui->btnClearAll,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
+    connect(ui->btnClearAll,&QPushButton::clicked,this,&MainWindow::btnClearAllClicked);
     connect(ui->btnDel,&QPushButton::clicked,this,&MainWindow::btnDelClicked);
     connect(ui->btnSign,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
     connect(ui->btnPercentage,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
@@ -40,25 +40,102 @@ MainWindow::~MainWindow()
 
 void MainWindow::btnNumClicked()
 {
-    QString str = ui->display->text();
-    QString str2 = qobject_cast<QPushButton*>(sender())->text();
-    str += str2;
-    ui->display->setText(str);
+    QString digit = qobject_cast<QPushButton*>(sender())->text();
+    if(digit == "0" && operand == "0")
+        digit = "";
+    if(digit != "0" && operand == "0")
+        operand = "";
+    operand += digit;
+    ui->display->setText(operand);
 
+}
+
+void MainWindow::btnBinaryOperatorClicked()
+{
+    opcode = qobject_cast<QPushButton*>(sender())->text();
+    if(operand != "")
+    {
+        operands.push_back(operand);
+        operand = "";
+    }
+    opcodes.push_back(opcode);
+
+    QString result = calculation();
+    ui->display->setText(result);
+}
+
+void MainWindow::btnbtnEqualClicked()
+{
+    if(operand != "")
+    {
+        operands.push_back(operand);
+        operand = "";
+    }
+
+    QString result = calculation();
+    ui->display->setText(result);
 }
 
 void MainWindow::btnPeriodClicked()
 {
-    QString str = ui->display->text();
-    QString str2 = qobject_cast<QPushButton*>(sender())->text();
-    if(!str.contains("."))
-        str += str2;
-    ui->display->setText(str);
+    if(!operand.contains("."))
+        operand += qobject_cast<QPushButton*>(sender())->text();
+    ui->display->setText(operand);
 }
 
 void MainWindow::btnDelClicked()
 {
-    QString str = ui->display->text();
-    str =str.left(str.length() - 1);
-    ui->display->setText(str);
+    operand = operand.left(operand.length() - 1);
+    ui->display->setText(operand);
 }
+
+void MainWindow::btnClearAllClicked()
+{
+    operand.clear();
+    ui->display->setText(operand);
+}
+
+QString MainWindow::calculation(bool *ok)
+{
+    Q_UNUSED(ok);
+
+    double result = 0;
+    if(operands.size() == 2 && opcodes.size() > 0)
+    {
+        double operand1 = operands.front().toDouble();
+        operands.pop_front();
+        double operand2 = operands.front().toDouble();
+        operands.pop_front();
+
+        QString op = opcodes.front();
+        opcodes.pop_front();
+
+        if(op == "+")
+        {
+            result = operand1 +operand2;
+        }
+        else if(op == "−")
+        {
+            result = operand1 - operand2;
+        }
+        else if(op == "×")
+        {
+            result = operand1 * operand2;
+        }
+        else if(op == "÷")
+        {
+            result = operand1 / operand2;
+        }
+
+        // 把本次计算结果压回操作数栈，供连续运算使用
+        QString resultStr = QString::number(result);
+        operands.push_back(resultStr);
+        return resultStr;
+    }
+    else
+    {
+        // 操作数不足以完成一次运算时，保持当前显示内容
+        return ui->display->text();
+    }
+}
+
