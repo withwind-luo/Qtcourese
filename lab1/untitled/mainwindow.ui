@@ -13,6 +13,114 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">/* 窗口背景 */
+QMainWindow, QWidget#centralwidget {
+    background-color: #F3F3F3;
+}
+
+QMenuBar {
+    background-color: #F3F3F3;
+    border: none;
+}
+QMenuBar::item {
+    background: transparent;
+}
+QMenuBar::item:selected {
+    background-color: #E5E5E5;
+}
+
+QStatusBar {
+    background-color: #F3F3F3;
+    color: #666666;
+    border: none;
+}
+
+/* 显示屏 */
+QLineEdit#display {
+    background-color: #F5F5F5;
+    border: none;
+    color: #000000;
+    font-family: "Segoe UI";
+    font-size: 32px;
+    font-weight: 300;
+    padding: 0px 12px;
+    placeholder-text-color: #000000;
+    selection-background-color: #CCE4F7;
+    selection-color: #000000;
+}
+
+/* 按钮通用样式 */
+QPushButton {
+    background-color: #FCFCFC;
+    border: none;
+    border-radius: 4px;
+    color: #1B1B1B;
+    font-family: "Segoe UI";
+    font-size: 20px;
+    padding: 0px;
+}
+QPushButton:hover {
+    background-color: #F2F2F2;
+}
+QPushButton:pressed {
+    background-color: #E8E8E8;
+}
+
+/* 顶部功能键：略深一点的底色 */
+QPushButton#btnPercentage,
+QPushButton#btnClear,
+QPushButton#btnClearAll,
+QPushButton#btnDel,
+QPushButton#btnInverse,
+QPushButton#btnSquare,
+QPushButton#btnSqrt,
+QPushButton#btnDivide {
+    background-color: #F8F8F8;
+    font-size: 16px;
+}
+QPushButton#btnPercentage:hover,
+QPushButton#btnClear:hover,
+QPushButton#btnClearAll:hover,
+QPushButton#btnDel:hover,
+QPushButton#btnInverse:hover,
+QPushButton#btnSquare:hover,
+QPushButton#btnSqrt:hover,
+QPushButton#btnDivide:hover {
+    background-color: #EFEFEF;
+}
+QPushButton#btnPercentage:pressed,
+QPushButton#btnClear:pressed,
+QPushButton#btnClearAll:pressed,
+QPushButton#btnDel:pressed,
+QPushButton#btnInverse:pressed,
+QPushButton#btnSquare:pressed,
+QPushButton#btnSqrt:pressed,
+QPushButton#btnDivide:pressed {
+    background-color: #E5E5E5;
+}
+
+/* 四则运算符 */
+QPushButton#btnPlus,
+QPushButton#btnMinus,
+QPushButton#btnMultiple,
+QPushButton#btnDivide {
+    font-size: 22px;
+}
+
+/* 等号键 */
+QPushButton#btnEqual {
+    background-color: #92C2E8;
+    color: #FFFFFF;
+    font-size: 24px;
+}
+QPushButton#btnEqual:hover {
+    background-color: #84B9E4;
+}
+QPushButton#btnEqual:pressed {
+    background-color: #74AEDA;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="enabled">
     <bool>true</bool>
