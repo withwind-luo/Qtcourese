@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
         {Qt::Key_Enter, ui->btnEqual},
         {Qt::Key_Backspace, ui->btnDel},
         {Qt::Key_Escape, ui->btnClearAll},
+        {Qt::Key_Delete, ui->btnClear},
         {Qt::Key_Percent, ui->btnPercentage},
     };
 
@@ -52,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnMultiple,&QPushButton::clicked,this,&MainWindow::btnBinaryOperatorClicked);
     connect(ui->btnDivide,&QPushButton::clicked,this,&MainWindow::btnBinaryOperatorClicked);
     connect(ui->btnEqual,&QPushButton::clicked,this,&MainWindow::btnbtnEqualClicked);
-    connect(ui->btnClear,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
+    connect(ui->btnClear,&QPushButton::clicked,this,&MainWindow::btnClearEntryClicked);
     connect(ui->btnClearAll,&QPushButton::clicked,this,&MainWindow::btnClearAllClicked);
     connect(ui->btnDel,&QPushButton::clicked,this,&MainWindow::btnDelClicked);
     connect(ui->btnSign,&QPushButton::clicked,this,&MainWindow::btnUnaryOperatorClicked);
@@ -69,6 +70,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::btnNumClicked()
 {
+    if(hasError)
+        resetState();
+
+    // 等号后直接输入数字：丢弃上次结果，开始新计算
+    if(afterEquals)
+    {
+        operands.clear();
+        opcodes.clear();
+        operand.clear();
+        afterEquals = false;
+    }
+
     QString digit = qobject_cast<QPushButton*>(sender())->text();
     if(digit == "0" && operand == "0")
         digit = "";
@@ -76,18 +89,31 @@ void MainWindow::btnNumClicked()
         operand = "";
     operand += digit;
     ui->display->setText(operand);
-
 }
 
 void MainWindow::btnBinaryOperatorClicked()
 {
+    if(hasError)
+        return;
+
+    afterEquals = false;
     opcode = qobject_cast<QPushButton*>(sender())->text();
+
     if(operand != "")
     {
         operands.push_back(operand);
         operand = "";
+        opcodes.push_back(opcode);
     }
-    opcodes.push_back(opcode);
+    else if(!opcodes.isEmpty())
+    {
+        // 连续按运算符：替换上一个待执行运算符
+        opcodes.top() = opcode;
+    }
+    else
+    {
+        opcodes.push_back(opcode);
+    }
 
     QString result = calculation();
     ui->display->setText(result);
@@ -95,29 +121,68 @@ void MainWindow::btnBinaryOperatorClicked()
 
 void MainWindow::btnUnaryOperatorClicked()
 {
-    if(operand != "")
+    if(hasError)
+        return;
+
+    // 等号后直接按单目键：以当前显示的结果作为操作数
+    if(operand.isEmpty() && afterEquals)
     {
-        double result = operand.toDouble();
-
-        QString op = qobject_cast<QPushButton*>(sender())->text();
-        if(op == "%")
-            result /= 100;
-        else if(op == "1/x")
-            result = 1 / result;
-        else if(op == "x²")
-            result *= result;
-        else if(op == "²√x")
-            result = sqrt(result);
-        else if(op == "±")
-            result = -result;
-
-        operand = QString::number(result);
-        ui->display->setText(operand);
+        operand = ui->display->text();
+        operands.clear();
+        opcodes.clear();
     }
+
+    if(operand.isEmpty())
+        return;
+
+    bool ok = false;
+    double result = operand.toDouble(&ok);
+    if(!ok)
+        return;
+
+    QString op = qobject_cast<QPushButton*>(sender())->text();
+    if(op == "%")
+        result /= 100;
+    else if(op == "1/x")
+    {
+        if(result == 0)
+        {
+            operand.clear();
+            operands.clear();
+            opcodes.clear();
+            hasError = true;
+            ui->display->setText("除数不能为 0");
+            return;
+        }
+        result = 1 / result;
+    }
+    else if(op == "x²")
+        result *= result;
+    else if(op == "²√x")
+    {
+        if(result < 0)
+        {
+            operand.clear();
+            operands.clear();
+            opcodes.clear();
+            hasError = true;
+            ui->display->setText("无效输入");
+            return;
+        }
+        result = sqrt(result);
+    }
+    else if(op == "±")
+        result = -result;
+
+    operand = QString::number(result);
+    ui->display->setText(operand);
 }
 
 void MainWindow::btnbtnEqualClicked()
 {
+    if(hasError)
+        return;
+
     if(operand != "")
     {
         operands.push_back(operand);
@@ -126,10 +191,26 @@ void MainWindow::btnbtnEqualClicked()
 
     QString result = calculation();
     ui->display->setText(result);
+
+    // 计算成功后才标记“上一步是等号”
+    afterEquals = !hasError;
 }
 
 void MainWindow::btnPeriodClicked()
 {
+    if(hasError)
+        resetState();
+
+    if(afterEquals)
+    {
+        operands.clear();
+        opcodes.clear();
+        operand.clear();
+        afterEquals = false;
+    }
+
+    if(operand.isEmpty())
+        operand = "0";
     if(!operand.contains("."))
         operand += qobject_cast<QPushButton*>(sender())->text();
     ui->display->setText(operand);
@@ -137,14 +218,48 @@ void MainWindow::btnPeriodClicked()
 
 void MainWindow::btnDelClicked()
 {
-    operand = operand.left(operand.length() - 1);
+    if(hasError)
+        return;
+
+    if(!operand.isEmpty())
+        operand.chop(1);
     ui->display->setText(operand);
+}
+
+void MainWindow::btnClearEntryClicked()
+{
+    if(hasError)
+    {
+        resetState();
+    }
+    else
+    {
+        operand.clear();
+        if(afterEquals)
+        {
+            operands.clear();
+            opcodes.clear();
+            opcode.clear();
+            afterEquals = false;
+        }
+    }
+    ui->display->clear();
 }
 
 void MainWindow::btnClearAllClicked()
 {
+    resetState();
+    ui->display->clear();
+}
+
+void MainWindow::resetState()
+{
+    operand.clear();
     operands.clear();
-    ui->display->setText(operand);
+    opcodes.clear();
+    opcode.clear();
+    afterEquals = false;
+    hasError = false;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -156,7 +271,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 QString MainWindow::calculation(bool *ok)
 {
-    Q_UNUSED(ok);
+    if(ok)
+        *ok = true;
 
     double result = 0;
     if(operands.size() == 2 && opcodes.size() > 0)
@@ -183,6 +299,17 @@ QString MainWindow::calculation(bool *ok)
         }
         else if(op == "÷")
         {
+            if(operand2 == 0)
+            {
+                if(ok)
+                    *ok = false;
+                operand.clear();
+                operands.clear();
+                opcodes.clear();
+                opcode.clear();
+                hasError = true;
+                return "除数不能为 0";
+            }
             result = operand1 / operand2;
         }
 

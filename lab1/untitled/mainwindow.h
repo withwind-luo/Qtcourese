@@ -26,6 +26,8 @@ public:
     QString opcode;
     QStack<QString> opcodes;
     QMap<int, QPushButton*> keyBtns;
+    bool afterEquals = false;
+    bool hasError = false;
 
 private:
     void btnNumClicked();
@@ -35,6 +37,8 @@ private:
     void btnPeriodClicked();
     void btnDelClicked();
     void btnClearAllClicked();
+    void btnClearEntryClicked();
+    void resetState();
     virtual void keyPressEvent(QKeyEvent *event) override;
     QString calculation(bool *ok = NULL);
     Ui::MainWindow *ui;
