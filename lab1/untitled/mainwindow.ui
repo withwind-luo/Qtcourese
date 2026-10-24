@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>计算器</string>
   </property>
   <property name="styleSheet">
    <string notr="true">/* 窗口背景 */
@@ -41,7 +41,7 @@ QLineEdit#display {
     background-color: #F5F5F5;
     border: none;
     color: #000000;
-    font-family: "Segoe UI";
+    font-family: &quot;Segoe UI&quot;;
     font-size: 32px;
     font-weight: 300;
     padding: 0px 12px;
@@ -56,7 +56,7 @@ QPushButton {
     border: none;
     border-radius: 4px;
     color: #1B1B1B;
-    font-family: "Segoe UI";
+    font-family: &quot;Segoe UI&quot;;
     font-size: 20px;
     padding: 0px;
 }

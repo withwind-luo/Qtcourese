@@ -7,7 +7,35 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    // 所有按钮复用同一个槽，槽内通过 sender() 区分具体按键
+
+    // 键盘按键 -> 对应按钮的映射
+    keyBtns = {
+        {Qt::Key_0, ui->btnNum0},
+        {Qt::Key_1, ui->btnNum1},
+        {Qt::Key_2, ui->btnNum2},
+        {Qt::Key_3, ui->btnNum3},
+        {Qt::Key_4, ui->btnNum4},
+        {Qt::Key_5, ui->btnNum5},
+        {Qt::Key_6, ui->btnNum6},
+        {Qt::Key_7, ui->btnNum7},
+        {Qt::Key_8, ui->btnNum8},
+        {Qt::Key_9, ui->btnNum9},
+        {Qt::Key_Period, ui->btnPeriod},
+        {Qt::Key_Plus, ui->btnPlus},
+        {Qt::Key_Minus, ui->btnMinus},
+        {Qt::Key_Asterisk, ui->btnMultiple},
+        {Qt::Key_Slash, ui->btnDivide},
+        {Qt::Key_multiply, ui->btnMultiple},
+        {Qt::Key_division, ui->btnDivide},
+        {Qt::Key_Equal, ui->btnEqual},
+        {Qt::Key_Return, ui->btnEqual},
+        {Qt::Key_Enter, ui->btnEqual},
+        {Qt::Key_Backspace, ui->btnDel},
+        {Qt::Key_Escape, ui->btnClearAll},
+        {Qt::Key_Percent, ui->btnPercentage},
+    };
+
+    // 数字键的鼠标点击连接（键盘事件通过 keyBtns 找到按钮后 animateClick）
     connect(ui->btnNum0,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
     connect(ui->btnNum1,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
     connect(ui->btnNum2,&QPushButton::clicked,this,&MainWindow::btnNumClicked);
@@ -117,6 +145,13 @@ void MainWindow::btnClearAllClicked()
 {
     operands.clear();
     ui->display->setText(operand);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    QPushButton *btn = keyBtns.value(event->key(), nullptr);
+    if (btn)
+        btn->animateClick();
 }
 
 QString MainWindow::calculation(bool *ok)

@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QStack>
+#include <QMap>
+#include <QKeyEvent>
+#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,6 +25,7 @@ public:
     QStack<QString> operands;
     QString opcode;
     QStack<QString> opcodes;
+    QMap<int, QPushButton*> keyBtns;
 
 private:
     void btnNumClicked();
@@ -31,6 +35,7 @@ private:
     void btnPeriodClicked();
     void btnDelClicked();
     void btnClearAllClicked();
+    virtual void keyPressEvent(QKeyEvent *event) override;
     QString calculation(bool *ok = NULL);
     Ui::MainWindow *ui;
 };
