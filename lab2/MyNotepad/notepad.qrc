@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/about.png</file>
+        <file>image/app_icon.png</file>
+        <file>image/autosave.png</file>
+        <file>image/background_color.png</file>
+        <file>image/copy.png</file>
+        <file>image/cut.png</file>
+        <file>image/exit.png</file>
+        <file>image/find.png</file>
+        <file>image/font_color.png</file>
+        <file>image/font_size.png</file>
+        <file>image/help.png</file>
+        <file>image/line_numbers.png</file>
+        <file>image/new_file.png</file>
+        <file>image/open_file.png</file>
+        <file>image/palette.png</file>
+        <file>image/paste.png</file>
+        <file>image/redo.png</file>
+        <file>image/replace.png</file>
+        <file>image/save.png</file>
+        <file>image/save_as.png</file>
+        <file>image/select_all.png</file>
+        <file>image/settings.png</file>
+        <file>image/status_bar.png</file>
+        <file>image/toolbar.png</file>
+        <file>image/undo.png</file>
+        <file>image/view_compact.png</file>
+        <file>image/visibility.png</file>
+        <file>image/visibility_off.png</file>
+        <file>image/word_wrap.png</file>
+    </qresource>
+</RCC>
