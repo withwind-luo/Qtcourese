@@ -24,6 +24,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         notepad.qrc
+        aboutdialog.h aboutdialog.cpp aboutdialog.ui
+        searchdialog.h searchdialog.cpp searchdialog.ui
+        replacedialog.h replacedialog.cpp replacedialog.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MyNotepad APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

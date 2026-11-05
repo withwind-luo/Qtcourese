@@ -23,5 +23,9 @@ private:
 
     QLabel statusCursorLabel;
     QLabel statusLabel;
+
+    void on_actionAbout_Trigger();
+    void on_actionFind_Trigger();
+    void on_actionReplace_Trigger();
 };
 #endif // MAINWINDOW_H

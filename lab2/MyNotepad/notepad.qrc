@@ -29,5 +29,6 @@
         <file>image/visibility.png</file>
         <file>image/visibility_off.png</file>
         <file>image/word_wrap.png</file>
+        <file>image/Notepad_23093.png</file>
     </qresource>
 </RCC>
