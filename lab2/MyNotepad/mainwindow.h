@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,11 +19,23 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
 
     QLabel statusCursorLabel;
     QLabel statusLabel;
+    QString filePath;
+    bool textChanged = false;
+
+    void on_actionNew_Trigger();
+    void on_actionOpen_Trigger();
+    void on_actionSave_Trigger();
+    void on_actionSaveAs_Trigger();
+    void on_textEdit_textChanged();
+    bool userEditConfirmed();
 
     void on_actionAbout_Trigger();
     void on_actionFind_Trigger();
