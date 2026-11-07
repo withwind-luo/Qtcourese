@@ -21,10 +21,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSaveAs,&QAction::triggered,this,&MainWindow::on_actionSaveAs_Trigger);
     connect(ui->actionExit,&QAction::triggered,this,&QWidget::close);
 
+    connect(ui->actionUndo,&QAction::triggered,this,&MainWindow::on_actionUndo_Trigger);
+    connect(ui->actionRedo,&QAction::triggered,this,&MainWindow::on_actionRedo_Trigger);
+    connect(ui->actionCut,&QAction::triggered,this,&MainWindow::on_actionCut_Trigger);
+    connect(ui->actionCopy,&QAction::triggered,this,&MainWindow::on_actionCopy_Trigger);
+    connect(ui->actionPaste,&QAction::triggered,this,&MainWindow::on_actionPaste_Trigger);
+
     connect(ui->actionAbout,&QAction::triggered,this,&MainWindow::on_actionAbout_Trigger);
     connect(ui->actionFind,&QAction::triggered,this,&MainWindow::on_actionFind_Trigger);
     connect(ui->actionReplace,&QAction::triggered,this,&MainWindow::on_actionReplace_Trigger);
     connect(ui->textEdit,&QPlainTextEdit::textChanged,this,&MainWindow::on_textEdit_textChanged);
+    connect(ui->textEdit,&QPlainTextEdit::undoAvailable,this,&MainWindow::on_textEdit_undoAvailable);
+    connect(ui->textEdit,&QPlainTextEdit::redoAvailable,this,&MainWindow::on_textEdit_redoAvailable);
+    connect(ui->textEdit,&QPlainTextEdit::copyAvailable,this,&MainWindow::on_textEdit_copyAvailable);
 
     statusLabel.setMaximumWidth(150);
     statusLabel.setText("length: " + QString::number(0) + "     lines:" + QString::number(1));
@@ -37,6 +46,13 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *author = new QLabel(ui->statusbar);
     author->setText(tr("xxx"));
     ui->statusbar->addPermanentWidget(author);
+
+    on_actionNew_Trigger();
+    ui->actionUndo->setEnabled(false);
+    ui->actionRedo->setEnabled(false);
+    ui->actionCopy->setEnabled(false);
+    ui->actionCut->setEnabled(false);
+    ui->actionPaste->setEnabled(false);
 
 
 }
@@ -184,10 +200,54 @@ void MainWindow::on_textEdit_textChanged()
     }
 }
 
+void MainWindow::on_textEdit_undoAvailable(bool available)
+{
+    ui->actionUndo->setEnabled(available);
+}
+
+
+void MainWindow::on_textEdit_redoAvailable(bool available)
+{
+    ui->actionRedo->setEnabled(available);
+}
+
+void MainWindow::on_textEdit_copyAvailable(bool available)
+{
+    ui->actionCopy->setEnabled(available);
+    ui->actionCut->setEnabled(available);
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if(userEditConfirmed())
         event->accept();
     else
         event->ignore();
+}
+
+void MainWindow::on_actionUndo_Trigger()
+{
+    ui->textEdit->undo();
+}
+
+void MainWindow::on_actionRedo_Trigger()
+{
+    ui->textEdit->redo();
+}
+
+void MainWindow::on_actionCut_Trigger()
+{
+    ui->textEdit->cut();
+    ui->actionPaste->setEnabled(true);
+}
+
+void MainWindow::on_actionCopy_Trigger()
+{
+    ui->textEdit->copy();
+    ui->actionPaste->setEnabled(true);
+}
+
+void MainWindow::on_actionPaste_Trigger()
+{
+    ui->textEdit->paste();
 }

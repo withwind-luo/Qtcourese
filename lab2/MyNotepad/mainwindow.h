@@ -34,7 +34,15 @@ private:
     void on_actionOpen_Trigger();
     void on_actionSave_Trigger();
     void on_actionSaveAs_Trigger();
+    void on_actionUndo_Trigger();
+    void on_actionRedo_Trigger();
+    void on_actionCut_Trigger();
+    void on_actionCopy_Trigger();
+    void on_actionPaste_Trigger();
     void on_textEdit_textChanged();
+    void on_textEdit_undoAvailable(bool available);
+    void on_textEdit_redoAvailable(bool available);
+    void on_textEdit_copyAvailable(bool available);
     bool userEditConfirmed();
 
     void on_actionAbout_Trigger();
