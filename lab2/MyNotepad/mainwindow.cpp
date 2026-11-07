@@ -22,19 +22,23 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionOpen,&QAction::triggered,this,&MainWindow::on_actionOpen_Trigger);
     connect(ui->actionSave,&QAction::triggered,this,&MainWindow::on_actionSave_Trigger);
     connect(ui->actionSaveAs,&QAction::triggered,this,&MainWindow::on_actionSaveAs_Trigger);
-    connect(ui->actionExit,&QAction::triggered,this,&QWidget::close);
+    connect(ui->actionExit,&QAction::triggered,this,&MainWindow::on_actionExit_Trigger);
 
     connect(ui->actionUndo,&QAction::triggered,this,&MainWindow::on_actionUndo_Trigger);
     connect(ui->actionRedo,&QAction::triggered,this,&MainWindow::on_actionRedo_Trigger);
     connect(ui->actionCut,&QAction::triggered,this,&MainWindow::on_actionCut_Trigger);
     connect(ui->actionCopy,&QAction::triggered,this,&MainWindow::on_actionCopy_Trigger);
     connect(ui->actionPaste,&QAction::triggered,this,&MainWindow::on_actionPaste_Trigger);
+    connect(ui->actionSelectAll,&QAction::triggered,this,&MainWindow::on_actionSelectAll_Trigger);
 
     connect(ui->actionFont,&QAction::triggered,this,&MainWindow::on_actionFont_Trigger);
     connect(ui->actionFontColor,&QAction::triggered,this,&MainWindow::on_actionFontColor_Trigger);
     connect(ui->actionBackgroundColor,&QAction::triggered,this,&MainWindow::on_actionBackgroundColor_Trigger);
     connect(ui->actionFontBackgroundColor,&QAction::triggered,this,&MainWindow::on_actionFontBackgroundColor_Trigger);
     connect(ui->actionWordWrap,&QAction::triggered,this,&MainWindow::on_actionWordWrap_Trigger);
+
+    connect(ui->actionToolbar,&QAction::triggered,this,&MainWindow::on_actionToolbar_Trigger);
+    connect(ui->actionStatusBar,&QAction::triggered,this,&MainWindow::on_actionStatusBar_Trigger);
 
     connect(ui->actionAbout,&QAction::triggered,this,&MainWindow::on_actionAbout_Trigger);
     connect(ui->actionFind,&QAction::triggered,this,&MainWindow::on_actionFind_Trigger);
@@ -62,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionCopy->setEnabled(false);
     ui->actionCut->setEnabled(false);
     ui->actionPaste->setEnabled(false);
+
+    ui->actionStatusBar->setEnabled(true);
+    ui->actionToolbar->setEnabled(true);
 
 
 }
@@ -182,6 +189,11 @@ void MainWindow::on_actionSaveAs_Trigger()
     textChanged = false;
 }
 
+void MainWindow::on_actionExit_Trigger()
+{
+    close();
+}
+
 void MainWindow::on_actionAbout_Trigger()
 {
     AboutDialog dlg;
@@ -261,6 +273,11 @@ void MainWindow::on_actionPaste_Trigger()
     ui->textEdit->paste();
 }
 
+void MainWindow::on_actionSelectAll_Trigger()
+{
+    ui->textEdit->selectAll();
+}
+
 void MainWindow::on_actionFont_Trigger()
 {
     if (!ui->textEdit->textCursor().hasSelection())
@@ -323,4 +340,18 @@ void MainWindow::on_actionWordWrap_Trigger()
         ui->textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
         ui->actionWordWrap->setChecked(false);
     }
+}
+
+void MainWindow::on_actionToolbar_Trigger()
+{
+    bool visible = ui->toolBar->isVisible();
+    ui->toolBar->setVisible(!visible);
+    ui->actionToolbar->setChecked(!visible);
+}
+
+void MainWindow::on_actionStatusBar_Trigger()
+{
+    bool visible = ui->statusbar->isVisible();
+    ui->statusbar->setVisible(!visible);
+    ui->actionStatusBar->setChecked(!visible);
 }
