@@ -202,7 +202,7 @@ void MainWindow::on_actionAbout_Trigger()
 
 void MainWindow::on_actionFind_Trigger()
 {
-    SearchDialog dlg;
+    SearchDialog dlg(this, ui->textEdit);
     dlg.exec();
 }
 
