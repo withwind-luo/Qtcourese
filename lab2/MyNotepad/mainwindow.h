@@ -39,6 +39,11 @@ private:
     void on_actionCut_Trigger();
     void on_actionCopy_Trigger();
     void on_actionPaste_Trigger();
+    void on_actionFont_Trigger();
+    void on_actionFontColor_Trigger();
+    void on_actionBackgroundColor_Trigger();
+    void on_actionFontBackgroundColor_Trigger();
+    void on_actionWordWrap_Trigger();
     void on_textEdit_textChanged();
     void on_textEdit_undoAvailable(bool available);
     void on_textEdit_redoAvailable(bool available);

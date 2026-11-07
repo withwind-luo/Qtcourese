@@ -8,6 +8,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QColorDialog>
+#include <QTextCharFormat>
+#include <QFontDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,6 +29,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionCut,&QAction::triggered,this,&MainWindow::on_actionCut_Trigger);
     connect(ui->actionCopy,&QAction::triggered,this,&MainWindow::on_actionCopy_Trigger);
     connect(ui->actionPaste,&QAction::triggered,this,&MainWindow::on_actionPaste_Trigger);
+
+    connect(ui->actionFont,&QAction::triggered,this,&MainWindow::on_actionFont_Trigger);
+    connect(ui->actionFontColor,&QAction::triggered,this,&MainWindow::on_actionFontColor_Trigger);
+    connect(ui->actionBackgroundColor,&QAction::triggered,this,&MainWindow::on_actionBackgroundColor_Trigger);
+    connect(ui->actionFontBackgroundColor,&QAction::triggered,this,&MainWindow::on_actionFontBackgroundColor_Trigger);
+    connect(ui->actionWordWrap,&QAction::triggered,this,&MainWindow::on_actionWordWrap_Trigger);
 
     connect(ui->actionAbout,&QAction::triggered,this,&MainWindow::on_actionAbout_Trigger);
     connect(ui->actionFind,&QAction::triggered,this,&MainWindow::on_actionFind_Trigger);
@@ -250,4 +259,68 @@ void MainWindow::on_actionCopy_Trigger()
 void MainWindow::on_actionPaste_Trigger()
 {
     ui->textEdit->paste();
+}
+
+void MainWindow::on_actionFont_Trigger()
+{
+    if (!ui->textEdit->textCursor().hasSelection())
+        return;
+
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, ui->textEdit->currentCharFormat().font(), this, "选择字体");
+    if (!ok)
+        return;
+
+    QTextCharFormat fmt;
+    fmt.setFont(font);
+    ui->textEdit->mergeCurrentCharFormat(fmt);
+}
+
+void MainWindow::on_actionFontColor_Trigger()
+{
+    if (!ui->textEdit->textCursor().hasSelection())
+        return;
+
+    QColor color = QColorDialog::getColor(ui->textEdit->currentCharFormat().foreground().color(), this, "选择颜色");
+    if (!color.isValid())
+        return;
+
+    QTextCharFormat fmt;
+    fmt.setForeground(color);
+    ui->textEdit->mergeCurrentCharFormat(fmt);
+}
+
+
+void MainWindow::on_actionBackgroundColor_Trigger()
+{
+    QColor color = QColorDialog::getColor(Qt::black ,this , "选择颜色");
+    if (color.isValid()) {
+        ui->textEdit->setStyleSheet(QString("QPlainTextEdit {background-color: %1};").arg(color.name()));
+    }
+}
+
+void MainWindow::on_actionFontBackgroundColor_Trigger()
+{
+    if (!ui->textEdit->textCursor().hasSelection())
+        return;
+
+    QColor color = QColorDialog::getColor(Qt::white, this, "选择字体背景色");
+    if (!color.isValid())
+        return;
+
+    QTextCharFormat fmt;
+    fmt.setBackground(color);
+    ui->textEdit->mergeCurrentCharFormat(fmt);
+}
+
+void MainWindow::on_actionWordWrap_Trigger()
+{
+    QPlainTextEdit::LineWrapMode mode = ui->textEdit->lineWrapMode();
+    if (mode == QPlainTextEdit::NoWrap) {
+        ui->textEdit->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+        ui->actionWordWrap->setChecked(true);
+    } else {
+        ui->textEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        ui->actionWordWrap->setChecked(false);
+    }
 }
