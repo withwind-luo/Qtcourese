@@ -47,13 +47,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->textEdit,&QPlainTextEdit::undoAvailable,this,&MainWindow::on_textEdit_undoAvailable);
     connect(ui->textEdit,&QPlainTextEdit::redoAvailable,this,&MainWindow::on_textEdit_redoAvailable);
     connect(ui->textEdit,&QPlainTextEdit::copyAvailable,this,&MainWindow::on_textEdit_copyAvailable);
+    connect(ui->textEdit,&QPlainTextEdit::cursorPositionChanged,this,&MainWindow::on_textEdit_cursorPositionChanged);
 
-    statusLabel.setMaximumWidth(150);
-    statusLabel.setText("length: " + QString::number(0) + "     lines:" + QString::number(1));
+    statusLabel.setMaximumWidth(200);
     ui->statusbar->addPermanentWidget(&statusLabel);
 
-    statusCursorLabel.setMaximumWidth(150);
-    statusCursorLabel.setText("Ln: " + QString::number(0) + "     COL:" + QString::number(1));
+    statusCursorLabel.setMaximumWidth(200);
     ui->statusbar->addPermanentWidget(&statusCursorLabel);
 
     QLabel *author = new QLabel(ui->statusbar);
@@ -219,6 +218,9 @@ void MainWindow::on_textEdit_textChanged()
             this->setWindowTitle("*" + this->windowTitle());
         textChanged = true;
     }
+
+    statusLabel.setText("length: " + QString::number(ui->textEdit->toPlainText().length()) +
+                        "     lines:" + QString::number(ui->textEdit->document()->lineCount()));
 }
 
 void MainWindow::on_textEdit_undoAvailable(bool available)
@@ -236,6 +238,28 @@ void MainWindow::on_textEdit_copyAvailable(bool available)
 {
     ui->actionCopy->setEnabled(available);
     ui->actionCut->setEnabled(available);
+}
+
+// TODO: 更新状态栏行列号（Ln / Col）
+void MainWindow::on_textEdit_cursorPositionChanged()
+{
+    int col = 0;
+    int ln = 0;
+    int flg = -1;
+    int pos = ui->textEdit->textCursor().position();
+    QString text = ui->textEdit->toPlainText();
+
+    for (int i = 0; i < pos; i++) {
+        if ( text[i] == '\n' ) {
+            ln ++;
+            flg = i;
+        }
+    }
+
+    flg ++;
+    col = pos - flg;
+
+    statusCursorLabel.setText("Ln: " + QString::number(ln + 1) + "     COL:" + QString::number(col + 1));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

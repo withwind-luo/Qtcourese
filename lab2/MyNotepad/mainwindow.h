@@ -52,6 +52,7 @@ private:
     void on_textEdit_undoAvailable(bool available);
     void on_textEdit_redoAvailable(bool available);
     void on_textEdit_copyAvailable(bool available);
+    void on_textEdit_cursorPositionChanged();
     bool userEditConfirmed();
 
     void on_actionAbout_Trigger();
