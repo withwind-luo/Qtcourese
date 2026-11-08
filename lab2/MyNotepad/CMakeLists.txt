@@ -27,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         aboutdialog.h aboutdialog.cpp aboutdialog.ui
         searchdialog.h searchdialog.cpp searchdialog.ui
         replacedialog.h replacedialog.cpp replacedialog.ui
+        codeeditor.h codeeditor.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET MyNotepad APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -47,6 +48,9 @@ else()
 endif()
 
 target_link_libraries(MyNotepad PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+# 提升的自定义控件头文件（codeeditor.h）需要能从源码目录被找到
+target_include_directories(MyNotepad PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

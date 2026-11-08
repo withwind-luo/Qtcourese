@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionToolbar,&QAction::triggered,this,&MainWindow::on_actionToolbar_Trigger);
     connect(ui->actionStatusBar,&QAction::triggered,this,&MainWindow::on_actionStatusBar_Trigger);
+    connect(ui->actionLineNumber,&QAction::triggered,ui->textEdit,&CodeEditor::showLineNumberArea);
 
     connect(ui->actionAbout,&QAction::triggered,this,&MainWindow::on_actionAbout_Trigger);
     connect(ui->actionFind,&QAction::triggered,this,&MainWindow::on_actionFind_Trigger);
@@ -68,8 +69,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->actionStatusBar->setEnabled(true);
     ui->actionToolbar->setEnabled(true);
-
-
+    ui->actionLineNumber->setChecked(false);
+    ui->textEdit->showLineNumberArea(false);
 }
 
 MainWindow::~MainWindow()
@@ -379,3 +380,4 @@ void MainWindow::on_actionStatusBar_Trigger()
     ui->statusbar->setVisible(!visible);
     ui->actionStatusBar->setChecked(!visible);
 }
+
