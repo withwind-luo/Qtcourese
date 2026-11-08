@@ -208,7 +208,7 @@ void MainWindow::on_actionFind_Trigger()
 
 void MainWindow::on_actionReplace_Trigger()
 {
-    ReplaceDialog dlg;
+    ReplaceDialog dlg(this, ui->textEdit);
     dlg.exec();
 }
 

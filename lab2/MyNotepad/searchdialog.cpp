@@ -19,6 +19,9 @@ SearchDialog::SearchDialog(QWidget *parent ,QPlainTextEdit *textEdit)
 void SearchDialog::on_btFindNext_clicked()
 {
     QString target = ui->SearchText->text();
+    if (target == "" || pTextEdit == nullptr)
+        return;
+
     QString text = pTextEdit->toPlainText();
     QTextCursor c = pTextEdit->textCursor();
     int index = -1;
@@ -52,7 +55,7 @@ void SearchDialog::on_btFindNext_clicked()
 
 void SearchDialog::on_btCancel_clicked()
 {
-
+    reject();
 }
 
 SearchDialog::~SearchDialog()
